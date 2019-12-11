@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+{% load i18n static commontags %}
+
+{% block title %}{% trans 'Datos básicos' %}{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+<section>
+    <div class="container">
+        <div class="col-md-offset-2 col-md-8">
+            {% if form.errors %}
+            <div id="errores" rol='alert' aria-live='assertive' class="alert alert-danger sr-only" tabindex="0">
+                <p>Se han producido los siguientes errores:</p>
+                {% for field in form %}
+                {% for error in field.errors %}
+                <p>{{error}}</p>
+                {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form action="{% get_setting 'MIAR_URL' %}/inicio/">
+                <button id="volver" type="submit" class="btn btn-link"><i class="fa fa-arrow-left"></i>
+                Volver al inicio</button>
+            </form>
+
+            {% include "_snippets/messages.html" %}
+            <h1>Mi Perfil</h1>
+
+            <div class="panels-row-miargentina">
+                <div class="panel panel-default panel-border-success panel-nolink">
+                    <div class="panel-heading">
+                        <h2>Datos personales</h2>
+                    </div>
+                    <div class="panel-body">
+                        <form method="post">
+                        {% csrf_token %}
+                            <fieldset>
+                                <div class="row">
+                                  <div id="parent-selector-disabled">
+                                      {% comment %}
+                                      fist_name
+                                      {% endcomment %}
+                                      <div class="col-md-8 form-group item-form">
+                                      <label for="firstname">Nombre</label>
+                                      <input type="text" name="first_name" id="firstname"
+                                          value="{%if form.errors %} {{form.first_name.value}}{%else%}{{user.first_name}}{%endif%}"
+                                          class="form-control">
+                                      </div>
+                                      {% comment %}
+                                      last_name
+                                      {% endcomment %}
+                                      <div class="col-md-8 form-group item-form">
+                                      <label for="last_name">Apellido</label>
+                                      <input type="text" name="last_name" id="last_name"
+                                          value="{%if form.errors %} {{form.last_name.value}}{%else%}{{user.last_name}}{%endif%}"
+                                          class="form-control">
+                                      </div>
+                                      {% comment %}
+                                      gender
+                                      {% endcomment %}
+                                      <div class="col-md-8 form-group">
+                                      <fieldset>
+                                          <legend>
+                                          <label>Sexo</label>
+                                          </legend>
+                                          <p class="m-b-1" id="label_genero">Como aparece en tu DNI</p>
+                                          <div class="form-group m-b-0 item-form">
+                                          <label for="f" class="control-label radio-inline">
+
+                                              <input type="radio" name="gender" id="f" value="F" aria-describedby="label_genero"
+                                              {% if user.validation_level > 0 %}readonly{% endif %} {% if user.gender == 'F' %} checked
+                                              {% endif %}>
+                                              Femenino
+                                          </label>
+                                          <label for="m" class="radio-inline">
+                                              <input type="radio" name="gender" id="m" value="M" aria-describedby="label_genero"
+                                              {% if user.validation_level > 0 %}readonly{% endif %} {% if user.gender == 'M' %} checked
+                                              {% endif %}>
+                                              Masculino
+                                          </label>
+                                      </fieldset>
+                                      </div>
+                                      {% comment %}
+                                      birthdate
+                                      {% endcomment %}
+                                      <div class="col-md-8 form-group {% if form.birthdate.errors %} has-error {% endif %} ">
+                                      <label class="control-label" for="birthdate">Fecha de Nacimiento</label>
+                                      <input id="birthdate" class="form-control" type="text" name="birthdate"
+                                          value="{% if form.errors %}{{form.birthdate.value}}{%else%}{{user.birthdate|date:"d/m/Y"}} {% endif %}" placeholder="dd/mm/aaaa" data-mask="09/09/0000"
+                                          autocomplete="off" maxlength="10">
+                                          <span class="help-block">{% for error in form.birthdate.errors %}{{ error }}{% endfor %}</span>
+                                      </div>
+                                  </div>
+                                  {% comment %}
+                                  nationality
+                                  {% endcomment %}
+                                  <div class="col-md-8 form-group item-form">
+                                      <label for="born-country">Nacido en</label>
+                                      <select class="form-control" name="nationality" id="born-country">
+                                      <option value=""></option>
+                                      {% for country in countries %}
+                                      <option value="{{country.code}}"
+                                          {% if user.nationality.code == country.code %}selected{% endif %}>
+                                          {{ country.name }}
+                                      </option>
+                                      {% endfor %}
+                                      </select>
+                                  </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3>Domicilio</h3>
+                                    </div>
+                                    {% comment %}
+                                        country
+                                    {% endcomment %}
+                                    <div class="col-md-8 form-group item-form">
+                                        <label for="country-residence">País de residencia</label>
+                                        <select class="form-control chosen-select" name="country" id="country-residence">
+                                        <option value=""></option>
+                                        {% for country in countries %}
+                                        <option value="{{country.code}}" {% if user.country.code == country.code %}selected{% endif %}>
+                                            {{ country.name }}
+                                        </option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-8 form-group item-form">
+                                        <div class="row">
+                                        {% comment %}
+                                        street name
+                                        {% endcomment %}
+                                        <div class="col-xs-8">
+                                            <label for="street">Calle</label>
+                                            <input type="text" name="street_name" id="street" class="form-control" value="{{user.street_name}}">
+                                            <p class="help-block error hidden">Ingresá la calle de tu domicilio</p>
+                                        </div>
+                                        {% comment %}
+                                        streen number
+                                        {% endcomment %}
+                                        <div class="col-xs-4">
+                                            <label for="id-number-address">Número</label>
+                                            <input type="number" name="street_number" id="id-number-address" class="form-control" value="{{user.street_number}}">
+                                            <p class="help-block error hidden">Ingresá la calle de tu domicilio</p>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 form-group item-form">
+                                        {% comment %}
+                                        departament-floor
+                                        {% endcomment %}
+                                        <div class="row">
+                                        <div class="col-xs-4">
+                                            <label for="floor">Piso</label>
+                                            <input type="text" name="appartment_floor" id="floor" class="form-control"
+                                            value="{{user.appartment_floor}}">
+                                            <p class="help-block error hidden">Ingresá el piso de tu domicilio</p>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <label for="department">Departamento</label>
+                                            <input type="text" name="appartment_number" class="form-control" id="department" value="{{user.appartment_number}}">
+                                            <p class="help-block error hidden">Ingresá el departamento de tu edificio</p>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}
+                                        postal code
+                                    {% endcomment %}
+                                    <div class="col-md-8 form-group item-form">
+                                        <label for="postal-code">Código postal</label>
+                                        <input type="number" name="postal_code" class="form-control" value="{{user.postal_code}}" id="postal-code">
+                                        <p class="help-block error hidden">Ingresá tu nombre</p>
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3>Datos de contacto</h3>
+                                    </div>
+                                    {% comment %}
+                                        email
+                                    {% endcomment %}
+                                    <div class="col-md-8 form-group item-form {% if form.email.errors %} has-error {% endif %}">
+                                        <label class="control-label" for="email">Correo electrónico</label>
+                                        <input type="email" name="email" class="form-control" id="email"
+                                        value="{%if form.errors %} {{form.email.value}}{%else%}{{user.email}}{%endif%} ">
+                                        <span class="help-block">{% for error in form.email.errors %}{{ error }}{% endfor %}</span>
+                                    </div>
+                                    {% comment %}
+                                        movile-phone
+                                    {% endcomment %}
+                                    <div class="col-md-8 form-group item-form {% if form.phone_number.errors %} has-error {% endif %}">
+                                        <fieldset>
+                                            <legend>
+                                                Teléfono móvil
+                                            </legend>
+
+                                            <p class="control-label" class="m-b-1">Incluí el código de área de tu localidad</p>
+                                            <div class="row">
+                                                <div class="col-xs-4">
+                                                    <div class="input-group">
+                                                        <label class="control-label sr-only" for="area-telephone">Código de área</label>
+                                                        <div class="input-group-addon">0</div>
+                                                        <input type="number" name="contact-data" id="area-telephone" class="form-control"
+                                                        onchange="validatePhone()"
+                                                        value="{%if form.errors %}{% get_area_code form.phone_number.value %}{%else%}{% get_area_code user.phone_number %}{% endif %}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-8 {% if form.phone_number.errors %} has-error {% endif %}">
+                                                    <div class="input-group">
+                                                        <label class="control-label sr-only" for="telephone-number">Número de teléfono</label>
+                                                        <div class="input-group-addon">15</div>
+                                                        <input type="number" id="telephone-number" class="form-control" onchange="validatePhone()"
+                                                        value="{%if form.errors %}{% get_phone_number form.phone_number.value %}{%else%}{% get_phone_number user.phone_number %}{% endif %}">
+                                                        <input style="display: none;" name="phone_number">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="help-block">{% for error in form.phone_number.errors %}{{ error }}{% endfor %}</span>
+                                        </fieldset>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-success">Guardar los cambios</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/jquery.mask.min.js' %}"></script>
+<script type="text/javascript">
+function validatePhone() {
+    var area_phone = $('input[id="area-telephone"]').val();
+    var number_phone = $('input[id="telephone-number"]').val();
+    if (area_phone && number_phone){
+        //folowing RFC 3966 extension syntax standard by openid
+        $("input[name='phone_number'").val('+54-'+area_phone+'-'+number_phone);
+    }
+}
+validatePhone()
+
+function viewpassword() {
+    var clave = document.getElementById('id_password')
+    if (clave.type === 'password') {
+        clave.type = 'text'
+        document.getElementById('eye-password').classList.remove("fa-eye-slash")
+        document.getElementById('eye-password').classList.add("fa-eye")
+    } else {
+        clave.type = 'password'
+        document.getElementById('eye-password').classList.remove("fa-eye")
+        document.getElementById('eye-password').classList.add("fa-eye-slash")
+    }
+}
+
+$(function () {
+    var district_select = $('select[name="district"]');
+    var locality_select = $('select[name="locality"]');
+    var state_select = $('select[name="state"]');
+
+    if ($('select[name="state"]').val() === '') {
+        district_select.attr('disabled', true);
+        locality_select.attr('disabled', true);
+    }
+
+    $('select[name="state"]').on('change', function () {
+        if (this.value === '') {
+            locality_select.attr('disabled', true);
+            district_select.attr('disabled', true);
+            district_select.empty();
+        } else {
+            //locality_select.removeAttr('disabled');
+            district_select.removeAttr('disabled');
+            //municipio required
+            district_select.attr('required', true);
+        }
+        load_districts(this.value);
+        load_localidades(this.value, "");
+    });
+
+    district_select.on('change', function () {
+        load_localidades($('select[name="state"]').val(), this.value)
+        if (this.value === '') {
+            locality_select.attr('disabled', true);
+        } else {
+            locality_select.removeAttr('disabled');
+            //province required
+            locality_select.attr('required', true);
+        }
+    });
+
+    locality_select.on('change', function () {
+        if (this.value !== '') {
+            district_select.val($(this).find("option:selected").data("district"));
+        }
+    });
+
+    // Nationality logic -----------------------------------------------
+
+    toogle_nationality_inputs($('select[name="country"]').val())
+
+    $('select[name="country"]').on('change', function () {
+        toogle_nationality_inputs(this.value);
+    });
+
+    function clear_nationality_inputs() {
+        $('select[name="state"]').val('');
+        $('select[name="district"]').val('');
+        $('select[name="locality"]').val('');
+    }
+
+    function toogle_nationality_inputs(value) {
+        if (value !== 'ARG') {
+            clear_nationality_inputs();
+            $('.only-arg').fadeOut();
+            if (value !== '') {
+                $('.except-arg').fadeIn();
+                //disable required
+                locality_select.removeAttr('required');
+                district_select.removeAttr('required');
+                state_select.removeAttr('required');
+            }
+        } else {
+            $('.except-arg').fadeOut();
+            $('.only-arg').fadeIn();
+
+            state_select.attr('required', true);
+        }
+    }
+
+    function load_districts(province) {
+        district_select.empty().append('<option value="" selected></option>');
+        // Make the ajax call to the server
+        url = "{% url 'accounts:districts' %}?province=" + province;
+        $.get(url).done(function (data) {
+            var aux, district, _i, _len;
+            data = data['results'];
+            for (_i = 0, _len = data.length; _i < _len; _i++) {
+            district = data[_i];
+            district_select.append('<option value="' + district['value'] + '">' + district['name'] + '</option>');
+            }
+        });
+    }
+
+    function load_localidades(province, district) {
+      // First we clean all options
+        locality_select.empty().append('<option value="" selected></option>');
+        // Make the ajax call to the server
+        url = "{% url 'accounts:localities' %}?province=" + province + "&district=" + district;
+        $.get(url).done(function (data) {
+            var aux, localidad, _i, _len;
+            data = data['results'];
+            for (_i = 0, _len = data.length; _i < _len; _i++) {
+            localidad = data[_i];
+            locality_select.append('<option value="' + localidad['value'] + '" data-district="' + localidad['district_id'] + '">' + localidad['name'] + '</option>');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "skeleton.html" %}
+{% load i18n static commontags %}
+
+{% block body %}
+{% if request.user.is_authenticated %}
+<header>
+  <nav class="navbar navbar-top navbar-default nav-header-dashboard" role="navigation">
+    <div class="container-fluid">
+      <div class="col-md-12">
+        <div class="navbar-header  m-y-1 navbar-left-mobile">
+          <ul class="nav navbar-nav">
+            <a href="#" class="visible-xs inicio">
+              <li>
+                <span class="icono-arg-casa-negativo icon-init  m-r-1 text-muted"></span>
+              </li>
+              <li>
+                <img alt="Mi Argentina" src="{% static 'img/miargentina.svg' %}" class="brand-icon hidden-xs">
+                <img alt="Mi Argentina" src="{% static 'img/logo-ma-sin.iso.svg' %}" class="brand-icon visible-xs">
+                <h1 class="sr-only">Mi Argentina <small>Presidencia de la Nación</small></h1>
+              </li>
+            </a>
+            <a href="{% get_setting 'MIAR_URL' %}/inicio" class="hidden-xs">
+              <li>
+                <img alt="Mi Argentina" src="{% static 'img/miargentina.svg' %}" class="brand-icon hidden-xs">
+                <img alt="Mi Argentina" src="{% static 'img/logo-ma-sin.iso.svg' %}" class="brand-icon visible-xs">
+                <h1 class="sr-only">Mi Argentina <small>Presidencia de la Nación</small></h1>
+              </li>
+            </a>
+          </ul>
+        </div>
+        <div class="nav navbar-nav navbar-right navbar-right-mobile navbar-right-header m-t-2">
+          <a href="" class="dropdown-toggle" id="dropdown-micuenta" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <span>Mi cuenta </span>
+            <span class="fa fa-chevron-down text-muted m-l-1"></span>
+          </a>
+          <div class="dropdown-menu dropdown-micuenta" aria-labely="dropdown-micuenta">
+            <ul>
+              <li>
+                <p><strong>{{request.user.get_full_name}}</strong></p>
+              </li>
+              <li>
+                <p>{{request.user.email}}</p>
+                <p></p>
+              </li>
+              <hr class="m-y-1">
+              <li class=""><a href="{% url 'accounts:profile' %}">Mi perfil</a></li>
+              <li class="" data-id="configurar-notificaciones"><a
+                  href="{% get_setting 'MIAR_URL' %}/configurar-notificaciones">Configurar notificaciones</a></li>
+              <li class=""><a href="{% url 'accounts:profile-settings' %}">Configurar mi cuenta</a></li>
+              <hr class="m-y-1">
+              {% if request.user.is_superuser %}
+              <li class="menu"><a href="/admin/">Administrador</a></li>
+              {% endif %}
+              <li class="menu"><a href="{% url 'accounts:logout' %}?next={{ request.get_full_path | urlencode }}"
+                  class="logout">Cerrar la sesión</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+{% else %}
+<header>
+  <nav class="navbar navbar-top navbar-default" role="navigation">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+          <div class="navbar-header">
+            <a class="navbar-brand brand-id" href="{% get_setting 'MIAR_URL' %}"
+              aria-label="Mi Argentina - Presidencia de la Nación">
+              <img alt="mi.argentina.gob.ar" src="{% static 'img/logo.svg' %}" height="50">
+              <h1 class="sr-only">Mi Argentina <small>Presidencia de la Nación</small></h1>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+{% endif %}
+
+<main role="main">
+
+  {% block content %}{% endblock %}
+
+</main>
+{% if request.user.is_authenticated %}
+<footer class="main-footer">
+  <div class="container-fluid">
+    <div class="row footer" style="">
+      <div class="col-xs-12 col-sm-4 first-footer-item" style="">
+        <a href="{% get_setting 'ARGENTINAGOBAR_URL' %}/terminos-y-condiciones">Términos y condiciones</a>
+      </div>
+      <div class="col-xs-12 col-sm-2">
+        <img class="image-responsive" alt="Subsecretaría de Gobierno Digital" src="{% static 'img/logo-ssgd.svg' %}">
+      </div>
+      <div class="col-xs-12 col-sm-2">
+        <img class="image-responsive" alt="Presidencia de la Nación" src="{% static 'img/logo-presidencia.svg' %}">
+      </div>
+    </div>
+  </div>
+</footer>
+{% else %}
+<footer class="main-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+        <div class="row">
+          <div class="col-xs-12" style="">
+            <a href="{% get_setting 'ARGENTINAGOBAR_URL' %}/terminos-y-condiciones" target="_blank"><span
+                class="sr-only">Abrir vínculo en nueva pestaña</span>Terminos y condiciones</a>
+          </div>
+        </div>
+        <div class="row m-t-2">
+          <div class="col-sm-6">
+            <img class="image-responsive" alt="Subsecretaría de Gobierno Digital"
+              src="{% static 'img/logo-ssgd.svg' %}">
+          </div>
+          <div class="col-sm-6">
+            <img class="image-responsive" alt="Presidencia de la Nación" src="{% static 'img/logo-presidencia.svg' %}">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,95 @@
+{% load i18n %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %} | Mi Argentina</title>
+    <meta name="description" content="El perfil digital del ciudadano, todas las interacciones con el Estado en un solo lugar."/>
+    <meta name="keywords" content="mi argentina, tramites, servicios, seguimiento, notificaciones, alertas, Estado, perfil digital"/>
+    <meta name="language" content="Spanish"/>
+    <meta name="revisit" content="1 day"/>
+    <meta name="distribution" content="Global"/>
+    <meta name="robots" content="All"/>
+    <meta name="author" content="Subsecretaría de Gobierno Digital. Presidencia de la Nación."/>
+
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+
+    <!-- Nav and address bar color -->
+    <meta name="theme-color" content="#0072b8">
+    <meta name="msapplication-navbutton-color" content="#0072b8">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#0072b8">
+
+    <link href="{% static 'css/roboto-fontface.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/docs.css' %}" rel="stylesheet">
+    <link href="{% static 'css/icono-arg.css' %}" rel="stylesheet">
+    <link href="{% static 'css/poncho.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/miargentina.css' %}" rel="stylesheet">
+
+    {% block styles %}
+    {% endblock %}
+</head>
+
+
+{% if request.user.is_authenticated %}
+<body class="sticky-footer">
+{% else %}
+<body class="body-login">
+    {% endif %}
+
+    <!-- Google Tag Manager -->
+    <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-P68ZXT"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-P68ZXT');</script>
+    <!-- End Google Tag Manager -->
+
+
+    {% block body %}
+    {% endblock %}
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <script type="text/javascript">
+        function getCookie(e)
+        {var t=null;if(document.cookie&&""!=document.cookie)for(var o=document.cookie.split(";"),n=0;n<o.length;n++)
+        {var r=jQuery.trim(o[n]);if(r.substring(0,e.length+1)==e+"="){t=decodeURIComponent(r.substring(e.length+1));break}}return t}
+        function csrfSafeMethod(e){return/^(GET|HEAD|OPTIONS|TRACE)$/.test(e)}var csrftoken=getCookie("csrftoken");
+        $.ajaxSetup({beforeSend:function(e,t){csrfSafeMethod(t.type)||this.crossDomain||e.setRequestHeader("X-CSRFToken",csrftoken)}});
+
+            function redirectTo() {
+                window.location.href = "https://www.argentina.gob.ar/buscar/" + encodeURI(encodeURI($("#searchInput")[0].value));
+            }
+
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+
+            var searchInput = $("#searchInput");
+
+            $('#searchButton').click(function(event) {
+                event.preventDefault();
+                redirectTo();
+            });
+
+            searchInput.keypress(function(e) {
+                if(e.which == 13) {
+                    redirectTo();
+                }
+            });
+        });
+    </script>
+
+    {% block script %}
+    {% endblock %}
+
+</body>
+</html>

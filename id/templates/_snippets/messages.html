@@ -1,0 +1,15 @@
+{% if messages %}
+{% for message in messages %}
+<div class="alert {% if message.tags %}{% if message.tags == 'error' %}alert-danger{% else %}{% if message.tags == 'social-auth facebook error' or message.tags == 'social-auth google-oauth2 error' %}alert-info{% else %}alert-{{ message.tags }}{% endif %}{% endif %}{% else %}alert-info{% endif %}" role="alert">
+    <div class="media">
+        <div class="media-left">
+            <i class="fa fa-{% if message.tags %}{% if message.tags == 'error' %}close{% elif message.tags == 'success' %}check{% elif message.tags == 'social-auth facebook error' or message.tags == 'social-auth google-oauth2 error' %}exclamation-triangle{% else %}info{% endif %}{% else %}info{% endif %} fa-fw fa-3x"></i>
+        </div>
+        <div class="media-body">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ message | safe }}
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}

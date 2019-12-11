@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load i18n static commontags %}
+
+{% block title %}{% trans 'Configurar mi cuenta' %}{% endblock %}
+
+{% block content %}
+<section>
+    <div class="container">
+        <div class="col-md-offset-2 col-md-8">
+            <a id="volver" href="{% get_setting 'MIAR_URL' %}/inicio" class="btn btn-link"><span class="fa fa-arrow-left"></span> Volver al inicio</a>
+            <h1>Configurar mi cuenta</h1>
+
+            <div class="panels-row-miargentina">
+                <div class="panel panel-default panel-border-success panel-nolink">
+                    <div class="panel-heading">
+                        <h2>Cambiar contraseña</h2>
+                    </div>
+                    <div class="panel-body">
+                        <form id="passwordChangeForm">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="password" class="control-label">{% trans 'Contraseña actual' %}</label>
+                                <input id="password" class="form-control" type="password" name="password">
+                            </div>
+                            <div class="form-group">
+                                <label for="new_password" class="control-label">{% trans 'Nueva contraseña' %}</label>
+                                <input id="new_password" class="form-control" type="password" name="new_password">
+                            </div>
+                            <div class="form-group">
+                                <label for="new_password2" class="control-label">{% trans 'Repetir contraseña' %}</label>
+                                <input id="new_password2" class="form-control" type="password" name="new_password_again">
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-success btn-md" id="passwordChangeButton">{% trans 'Guardar Contraseña' %}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panels-row-miargentina">
+                <div class="panel panel-default panel-border-danger panel-nolink">
+                    <div class="panel-heading">
+                        <h2>Eliminar mi cuenta</h2>
+                        <p>{% trans 'Tené en cuenta que esta acción es irreversible y borrará todos tus datos.' %}</p>
+                    </div>
+                    <div class="panel-body">
+                        <form method="post" action="{% url 'accounts:delete' %}" id="deleteAccountForm" style="display:none">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="reason" class="control-label">{% trans 'Nos gustaría saber el motivo' %}:</label>
+                                <select id="reason" name="reason" class="form-control">
+                                    <option value=""></option>
+                                    {% for reason in delete_reasons %}
+                                    <option>{{ reason }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-danger deleteUserStep2" id="deleteAccountButton">{% trans 'Eliminar Mi Cuenta' %}</button>
+                            </div>
+                        </form>
+                        <button id="continue" type="button" class="btn btn-danger deleteUserStep1">{% trans 'Eliminar Mi Cuenta' %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+        $(function() {
+
+            var deleteAccountButton = $('#deleteAccountButton');
+            var deleteAccountForm = $('form#deleteAccountForm');
+
+            deleteAccountButton.click(function (event) {
+                if (deleteAccountButton.hasClass('state-loading')) { event.preventDefault(); return; }
+                deleteAccountButton.addClass('disabled').addClass('state-loading');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'accounts:delete' %}",
+                    data: deleteAccountForm.serialize()
+                })
+                .done(function (data) {
+                    window.location.href = {% url 'accounts:login' %};
+                })
+                .fail(function (data) {
+                    if (data.status === 403 || data.status === 500) {
+                        $('.alert-warning').remove();
+                        deleteAccountForm.after('<div class="alert alert-warning alert-dismissible" role="alert">{% trans "Hubo un error enviando los datos. Intentá recargando la página." %}</div>');
+                    } else {
+                        var response = data.responseJSON;
+                        var select = $('select[name="reason"]');
+
+                        if (response.errors) {
+                            var parent = select.parent();
+                            parent.addClass('has-error');
+
+                            if (parent.find('span').length == 0) {
+                                parent.append('<span class="help-block">'+response.errors.reason+'</span>');
+                            } else {
+                                parent.removeClass('has-error');
+                                parent.find('span').remove();
+                            }
+                        }
+                    }
+                })
+                .always(function () {
+                    deleteAccountButton.removeClass('disabled').removeClass('state-loading');
+                });
+            });
+
+
+            var passwordChangeButton = $('#passwordChangeButton');
+            var passwordChangeForm = $('form#passwordChangeForm');
+
+            passwordChangeButton.click(function (event) {
+                if (passwordChangeButton.hasClass('state-loading')) { event.preventDefault(); return; }
+                passwordChangeButton.addClass('disabled').addClass('state-loading');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'accounts:password-change' %}",
+                    data: passwordChangeForm.serialize()
+                })
+                .done(function (data) {
+                    window.location.href = {% url 'accounts:login' %};
+                })
+                .fail(function (data) {
+                    if (data.status === 403 || data.status === 500) {
+                        $('.alert-warning').remove();
+                        passwordChangeForm.after('<div class="alert alert-warning alert-dismissible" role="alert">{% trans "Hubo un error enviando los datos. Intentá recargando la página." %}</div>');
+                    } else {
+                        var response = data.responseJSON;
+                        var input;
+                        console.log(response);
+                        $.each(response.errors, function(key, value) {
+                            input = $('input[name="'+key+'"]');
+                            var parent = input.parent();
+                            console.log(parent);
+
+                            if (value) {
+                                parent.addClass('has-error');
+                                if (parent.find('span').length == 0) {
+                                    parent.append('<span class="help-block">'+value+'</span>');
+                                }
+                            } else {
+                                parent.removeClass('has-error');
+                                parent.find('span').remove();
+                            }
+                        });
+                    }
+                })
+                .always(function () {
+                    passwordChangeButton.removeClass('disabled').removeClass('state-loading');
+                });
+            });
+
+            $('input').focusout(function() {
+                var parent = $(this).parent();
+                parent.removeClass('has-error');
+                parent.find('span').remove();
+            });
+
+            $('.btn-group').click(function() {
+                var parent = $(this).parent();
+                parent.removeClass('has-error');
+                parent.find('span').remove();
+            });
+
+            $('#continue').click(function() {
+                $(this).remove();
+                deleteAccountForm.show();
+            });
+        });
+    </script>
+{% endblock %}

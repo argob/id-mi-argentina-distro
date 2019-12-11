@@ -1,0 +1,371 @@
+{% extends "base.html" %}
+{% load i18n commontags staticfiles %}
+
+{% block title %}{% trans 'Registro' %}{% endblock %}
+{% block styles %}
+<style>
+    .modal {
+        text-align: center;
+    }
+
+    .modal-dialog {
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .modal-content {
+        border: 0;
+        border-radius: 3px;
+    }
+
+    @media screen and (min-width: 768px) {
+        .modal:before {
+            display: inline-block;
+            vertical-align: middle;
+            content: " ";
+            height: 100%;
+        }
+
+        .modal-sm {
+            width: 335px;
+        }
+    }
+</style>
+
+{% endblock %}
+{% block content %}
+<div class="login-container">
+    <section class="container-fluid">
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3 m-t-2">
+                        <h1>{% trans 'Creá tu cuenta' %}</h1>
+                        <hr class="m-y-1">
+                        <p>{% trans 'Por favor completá estos datos para continuar.' %}</p>
+                        <p><a href="{% url 'accounts:login' %}{% if request.GET.next %}?next={{ request.GET.next | urlencode }}{% endif %}">{% trans 'Si ya estás registrado, ingresá a tu cuenta.' %}</a></p>
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            {% comment %}
+                            Hidden fields and panels error for accessibility
+                            {% endcomment %}
+                            <input type="hidden" name="next" value="{{ next }}">
+
+                            <div class="form-group item-form {% if form.email.errors %} has-error {% endif %}">
+                                <label for="email" class="control-label">{% trans 'Correo Electrónico' %}</label>
+                                <input autocomplete="off" id="email" class="form-control" type="email" name="email"
+                                    value="{% if form.errors %}{{ form.email.value }}{% endif %}">
+                                <p class="help-block error">{% for error in form.email.errors %}{{ error }}{% endfor %}</p>
+                            </div>
+                            <div class="form-group item-form {% if form.email_confirmation.errors %} has-error {% endif %}">
+                                <label for="email-confirmation" class="control-label">{% trans 'Confirmar Correo Electrónico' %}</label>
+                                <input autocomplete="off" id="email-confirmation" class="form-control" type="email" name="email_confirmation"
+                                    value="{% if form.errors %}{{ form.email.value }}{% endif %}">
+                                <p class="help-block error">{% for error in form.email_confirmation.errors %}{{ error }}{% endfor %}</p>
+                            </div>
+                            <div class="form-group item-form {% if form.first_name.errors %} has-error {% endif %}">
+                                <label for="first_name" class="control-label">{% trans 'Nombre' %}</label>
+                                <input id="first_name" class="form-control" type="text" name="first_name"
+                                    value="{% if form.errors %}{{ form.first_name.value }}{% endif %}">
+                                <p class="help-block error">{% for error in form.first_name.errors %}{{ error }}{% endfor %}</p>
+                            </div>
+                            <div class="form-group item-form {% if form.last_name.errors %} has-error {% endif %}">
+                                <label for="last_name" class="control-label">{% trans 'Apellido' %}</label>
+                                <input id="last_name" class="form-control" type="text" name="last_name"
+                                    value="{% if form.errors %}{{ form.last_name.value }}{% endif %}">
+                                <p class="help-block error">{% for error in form.last_name.errors %}{{ error }}{% endfor %}</p>
+                            </div>
+                            <div class="form-group item-form {% if form.gender.errors %} has-error {% endif %}">
+                                <fieldset>
+                                    <legend>
+                                        <label id="gender" for="gender" class="control-label">{% trans 'Sexo (según tu documento)' %}</label>
+                                    </legend>
+                                    <div class="btn-group btn-group-justified" data-toggle="buttons">
+                                        <label class="btn btn-default {% if form.errors == 'F' %} active{% endif %}">
+                                            <input type="radio" name="gender" id="gender" value="F"
+                                                {% if form.errors == 'F' %} checked{% endif %}>
+                                            {% trans 'Femenino' %}
+                                        </label>
+                                        <label class="btn btn-default{% if form.errors == 'M' %} active{% endif %}">
+                                            <input type="radio" name="gender" id="gender" value="M"
+                                                {% if form.errors == 'M' %} checked{% endif %}>
+                                            {% trans 'Masculino' %}
+                                        </label>
+                                    </div>
+                                    <p class="help-block error">{% for error in form.gender.errors %}{{ error }}{% endfor %}</p>
+                                </fieldset>
+                            </div>
+                            <div class="form-group item-form {% if form.birthdate.errors %} has-error {% endif %}">
+                                <label for="birthdate" class="control-label">{% trans 'Fecha de Nacimiento' %}</label>
+                                <input id="birthdate" class="form-control" type="text" name="birthdate"
+                                    value="{% if form.errors %}{{form.birthdate.value }}{% endif %}"
+                                    placeholder="{% trans 'dd/mm/aaaa' %}" data-mask="09/09/0000" autocomplete="off"
+                                    maxlength="10">
+                                <p class="help-block error">{% for error in form.birthdate.errors %}{{ error }}{% endfor %}</p>
+                            </div>
+
+                            <div class="form-group item-form {% if form.country.errors %} has-error {% endif %}">
+                                <label for="country" class="control-label">{% trans 'País de Residencia' %}</label>
+                                <select class="form-control chosen-select" name="country" id="country">
+                                    <option value=""></option>
+                                    {% if countries %}
+                                    {% for country in countries %}
+                                        <option value="{{ country.code }}">{{ country.name }}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                                <p class="help-block error">{% for error in form.country.errors %}{{ error }}{% endfor %}</p>
+                            </div>
+
+                            <div class="form-group item-form only-arg {% if form.state.errors %} has-error {% endif %}" style="display:none">
+                                <label for="state" class="control-label">{% trans 'Provincia' %}</label>
+                                <select class="form-control" name="state" id="state">
+                                    <option value=""></option>
+                                    {% if provinces %}
+                                    {% for province in provinces %}
+                                        <option value="{{ province.pk }}">{{ province }}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                                <p class="help-block error">{% for error in form.state.errors %}{{ error }}{% endfor %}</p>
+                            </div>
+
+                            <div class="form-group item-form only-arg {% if form.district.errors %} has-error {% endif %}" style="display:none">
+                                <label for="district" class="control-label">{% trans 'Municipio' %}</label>
+                                <select class="form-control" name="district" id="district">
+                                    <option value=""></option>
+                                    {% if districts %}
+                                    {% for district in districts %}
+                                        <option value="{{ district.pk }}">{{ district }}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                                <p class="help-block error">{% for error in form.district.errors %}{{ error }}{% endfor %}</p>
+                            </div>
+
+                            <div class="form-group item-form only-arg {% if form.locality.errors %} has-error {% endif %}" style="display:none">
+                                <label for="locality" class="control-label">{% trans 'Localidad' %}</label>
+                                <select class="form-control" name="locality" id="locality">
+                                    <option value=""></option>
+                                    {% if localities %}
+                                    {% for locality in localities %}
+                                        <option value="{{ locality.id }}" data-district="{{ locality.district_id }}">
+                                            {{ locality.name }}
+                                        </option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                                <p class="help-block error">{% for error in form.locality.errors %}{{ error }}{% endfor %}</p>
+                            </div>
+
+                            <div class="form-group item-form {% if form.password.errors %} has-error {% endif %}">
+                                <label for="password" class="control-label">{% trans 'Creá una contraseña para Mi Argentina' %}</label>
+                                <div class="help-block" id="help-password">Usá al menos 8 caracteres</div>
+                                <input autocomplete="off" id="password" class="form-control" type="password" name="password" value="">
+                                <div class="checkbox">
+                                    <label for="opcion" class="control-label" id="mostrar"><input id="opcion" name="mostrar" type="checkbox" value="">Mostrar la contraseña</label>
+                                </div>
+                                <p class="help-block error">{% for error in form.password.errors %}{{ error }}{% endfor %}</p>
+                            </div>
+                            {% if recaptcha_enable %}
+                            <div class="form-group">
+                                <input type="checkbox" id="recaptcha" name="recaptcha" style="display:none;">
+                                <div class="g-recaptcha" data-sitekey="{% get_setting 'RECAPTCHA_KEY' %}"
+                                    style="display:inline-block;"></div>
+                            </div>
+                            {% endif %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="well">
+                                        <fieldset>
+                                            <legend>
+                                                <h5>Términos y condiciones</h5>
+                                            </legend>
+                                            <p>Para crear tu cuenta es necesario que aceptes los <a href="https://www.argentina.gob.ar/mi/terminos-y-condiciones" target="_blank">{% trans "Términos y condiciones generales" %}</a> de Mi Argentina</p>
+                                            <div class="form-group item-form m-t-2 {% if terms_form.errors %}has-error{% endif %}">
+                                                {% for term in terms_form.general_field %}
+                                                <div class="checkbox">
+                                                    <label for="{{term.id_for_label}}" class="radio-inline">
+                                                        {% if not fields or term.name not in fields %}
+                                                            <input id="{{term.id_for_label}}" type="checkbox" name="{{ term.name }}">
+                                                        {% else %}
+                                                            {% for key, value in form.items %}
+                                                                {% if key == term.name  and value %}
+                                                                    <input id="{{term.id_for_label}}" type="checkbox" name="{{ term.name }}" checked >
+                                                                {% elif key == term.name and not value %}
+                                                                    <input id="{{term.id_for_label}}" type="checkbox" name="{{ term.name }}" />
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        {% trans term.label %}
+                                                    </label>
+                                                </div>
+                                                {% endfor %}
+                                                <p class="help-block error">{% for error in form_terms.errors %}{{ error }}{% endfor %}</p>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-xs-12">
+                                    <button type="submit" name="principal"
+                                        class="btn btn-success btn-block">{% trans 'Crear cuenta' %}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block script %}
+{% if recaptcha_enable %}<script src='https://www.google.com/recaptcha/api.js?hl=es-419'></script>{% endif %}
+<script src="{% static 'js/jquery.mask.min.js' %}"></script>
+<script src="{% static 'js/functions.js' %}"></script>
+<script type="text/javascript">
+$(function () {
+    /* Mostrar/ocultar contraseña */
+    let mostrar = document.getElementById('mostrar');
+    toggleShowHidePassword(mostrar);
+    cleanFormErrors();
+
+    var country_select = $('select[name="country"]');
+    var state_select = $('select[name="state"]');
+    var district_select = $('select[name="district"]');
+    var locality_select = $('select[name="locality"]');
+
+    if (state_select.val() === '') {
+        district_select.attr('disabled', true);
+        locality_select.attr('disabled', true);
+    }
+
+    state_select.on('change', function () {
+        if (this.value === '') {
+            locality_select.attr('disabled', true);
+            district_select.attr('disabled', true);
+            district_select.empty();
+        } else {
+            //locality_select.removeAttr('disabled');
+            district_select.removeAttr('disabled');
+        }
+        load_districts(this.value);
+        load_localidades(this.value, "");
+    });
+
+    district_select.on('change', function () {
+        load_localidades(state_select.val(), this.value)
+        if (this.value === '') {
+            locality_select.attr('disabled', true);
+        } else {
+            locality_select.removeAttr('disabled');
+        }
+    });
+
+    locality_select.on('change', function () {
+        if (this.value !== '') {
+            district_select.val($(this).find("option:selected").data("district"));
+        }
+    });
+
+    // Nationality logic -----------------------------------------------
+    toogle_nationality_inputs(country_select.val())
+
+    country_select.on('change', function () {
+        toogle_nationality_inputs(this.value);
+    });
+
+    function clear_nationality_inputs() {
+        state_select.val('');
+        district_select.val('');
+        locality_select.val('');
+    }
+
+    function toogle_nationality_inputs(value) {
+        if (value !== 'ARG') {
+            clear_nationality_inputs();
+            $('.only-arg').fadeOut();
+            if (value !== '') {
+                $('.except-arg').fadeIn();
+            }
+        } else {
+            $('.except-arg').fadeOut();
+            $('.only-arg').fadeIn();
+        }
+    }
+
+    function load_districts(province) {
+        district_select.empty().append('<option value="" selected></option>');
+        // Make the ajax call to the server
+        url = "{% url 'accounts:districts' %}?province=" + province;
+        $.get(url).done(function (data) {
+            var aux, district, _i, _len;
+            data = data['results'];
+            for (_i = 0, _len = data.length; _i < _len; _i++) {
+                district = data[_i];
+                district_select.append('<option value="' + district['value'] + '">' + district['name'] + '</option>');
+            }
+        });
+    }
+
+    function load_localidades(province, district) {
+        // First we clean all options
+        locality_select.empty().append('<option value="" selected></option>');
+        // Make the ajax call to the server
+        url = "{% url 'accounts:localities' %}?province=" + province + "&district=" + district;
+        $.get(url).done(function (data) {
+            var aux, localidad, _i, _len;
+            data = data['results'];
+            for (_i = 0, _len = data.length; _i < _len; _i++) {
+                localidad = data[_i];
+                locality_select.append('<option value="' + localidad['value'] + '" data-district="' + localidad['district_id'] + '">' + localidad['name'] + '</option>');
+            }
+        });
+    }
+
+    function choose_locality(province, district, locality) {
+        // First we clean all options
+        locality_select.empty().append('<option value="" selected></option>');
+        // Make the ajax call to the server
+        url = "{% url 'accounts:localities' %}?province=" + province + "&district=" + district;
+        $.get(url).done(function (data) {
+            var aux, localidad, _i, _len;
+            data = data['results'];
+            for (_i = 0, _len = data.length; _i < _len; _i++) {
+                localidad = data[_i];
+                locality_select.append('<option value="' + localidad['value'] + '" data-district="' + localidad['district_id'] + '">' + localidad['name'] + '</option>');
+            }
+            locality_select.val(locality)
+        });
+    }
+
+    var country = "{{ form.country.value }}";
+    var state = "{{ form.state.value }}";
+    var district = "{{ form.district.value }}";
+    var locality = "{{ form.locality.value }}";
+
+    if (country != "") {
+        country_select.val(country);
+        if (state != "") {
+            state_select.val(state);
+            if (district != "") {
+                district_select.val(district);
+                district_select.removeAttr("disabled")
+                if (locality != "") {
+                    choose_locality(state, district, locality);
+                    locality_select.removeAttr("disabled")
+                }
+            }
+        }
+        country_select.change()
+    }
+});
+
+disableCopyPaste();
+</script>
+{% endblock %}

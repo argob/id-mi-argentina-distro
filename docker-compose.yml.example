@@ -1,0 +1,38 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: local_django
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver 0.0.0.0:8000
+
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:3.
+
+  celery:
+    build: .
+    command: celery -A id worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis

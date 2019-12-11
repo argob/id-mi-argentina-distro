@@ -1,0 +1,26 @@
+{% extends "emails/base.html" %}
+{% load i18n commontags %}
+
+{% block url_icon %}
+<tr>
+   <td>
+      <img src="https://www.argentina.gob.ar/sites/default/files/sucess_icon.png" alt="" border="0" width="62" height="63" style="display:block; border:none; outline:none; text-decoration:none;">
+   </td>
+</tr>
+{% endblock %}
+
+{% block title %}
+<tr>
+    <td style="font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;color:#333333;text-align:left;line-height: 30px;font-weight: 700;margin: .5em 0;font-size: 2em;">
+        {% trans 'Borraste tu cuenta de Mi Argentina' %}
+    </td>
+</tr>
+{% endblock %}
+
+{% block description %}
+<tr>
+    <td style="font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;color: #333333;text-align:left;line-height: 24px;font-size: 16px;">
+        <p>{% trans 'Recordá que podés volver a registrarte cuando quieras.' %}</p>
+    </td>
+</tr>
+{% endblock %}

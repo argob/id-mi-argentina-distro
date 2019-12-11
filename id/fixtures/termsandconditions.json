@@ -1,0 +1,11 @@
+[
+    {
+        "model": "id.termandcondition",
+        "pk": 1,
+        "fields": {
+            "slug_name": "general",
+            "name": "Acepto términos y condiciones generales.",
+            "is_principal": true
+        }
+    }
+]

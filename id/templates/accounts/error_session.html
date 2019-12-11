@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n commontags static %}
+{% load commontags %}
+
+{% block title %}{% trans 'Registro' %}{% endblock %}
+
+{% block content %}
+<section class="container-fluid container-id">
+  <div class="row">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
+
+          <h1>{% trans 'No se pudo completar la operación.' %}</h1>
+          <a class="btn btn-link m-t-2" href="{% url 'accounts:register' %}">{% trans 'Volver a intentar' %}</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

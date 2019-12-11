@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load i18n static commontags %}
+
+{% block title %}{% trans 'Términos y condiciones' %}{% endblock %}
+{% block styles %}
+<style>
+	.modal {
+		text-align: center;
+	}
+
+	.modal-dialog {
+		display: inline-block;
+		text-align: left;
+		vertical-align: middle;
+	}
+
+	.modal-content {
+		border: 0;
+		border-radius: 3px;
+	}
+
+	@media screen and (min-width: 768px) {
+		.modal:before {
+			display: inline-block;
+			vertical-align: middle;
+			content: " ";
+			height: 100%;
+		}
+
+		.modal-sm {
+			width: 335px;
+		}
+	}
+
+	{% if user_terms %}
+
+	input[name="general"],
+	label[for="id_general"] {
+		pointer-events: none;
+		opacity: 0.5;
+	}
+
+	{% endif %}
+</style>
+
+{% endblock %}
+{% block content %}
+<section>
+	<div class="container">
+		<div class="col-md-offset-2 col-md-8">
+			{% include "_snippets/messages.html" %}
+			{% if user_terms %}
+			<a id="volver" href="{% get_setting 'MIAR_URL' %}" class="btn btn-link"><i class="fa fa-arrow-left"></i>
+				Volver al
+				inicio</a>
+			{% endif %}
+			<form method="post" id="terms-conditions-form">
+				{% csrf_token %}
+				<fieldset>
+					<legend>
+						<h1>{% trans 'Términos y condiciones'%}</h1>
+					</legend>
+					<p class="m-b-1">
+						{% trans 'Hemos modificado los términos y condiciones. Para poder continuar es necesario que los aceptes nuevamente.'%}
+					</p>
+					<fieldset>
+						<legend>
+							<a href="https://www.argentina.gob.ar/mi/terminos-y-condiciones" target="_blank">Términos y
+								condiciones generales</a>
+						</legend>
+						<div class="form-group item-form">
+							<div class="checkbox">
+								<label for="{{form.general.id_for_label}}" class="radio-inline">
+									{{form.general}}
+									{{form.general.label}}
+								</label>
+								{% if form.general.errors %}
+								<div class="has-error">
+									<p class="help-block error ">
+										{% for error in form.general.errors %}{{ error }}{% endfor %}</p>
+								</div>
+								{% endif %}
+							</div>
+						</div>
+					</fieldset>
+					<div class="row">
+						<div class="col-xs-12">
+							{% if user_terms  %}
+							<a type="button" href="{% get_setting 'MIAR_URL' %}" class="btn btn-link m-r-1">
+								{% trans "Cancelar" %} </a>
+							{% endif %}
+							<a role="button" onclick="submitToC()" name="send-terms" class="btn btn-success"> {% trans "ACEPTAR Y CONTINUAR" %}
+							</a>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+{% block script %}
+<script>
+	function submitToC() {
+		document.getElementById("terms-conditions-form").submit();
+	}
+</script> 
+
+{% endblock %}

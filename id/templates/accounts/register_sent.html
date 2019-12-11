@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Registro' %}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default panel-icon panel-primary margin-40" href="#">
+                <div class="panel-heading"><i class="fa fa-envelope"></i></div>
+                <div class="panel-body">
+                    <h1>{% trans 'Revisa tu casilla de correo' %}</h1>
+                    <p>{% trans 'Hemos enviado un email a la siguiente casilla:' %} {{request.GET.email}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n commontags static %}
+{% load commontags %}
+
+{% block title %}{% trans 'Registro' %}{% endblock %}
+
+{% block content %}
+<section class="container-fluid container-id">
+  <div class="row">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+          <h1>{% trans 'Confirmá los datos para crear tu cuenta' %}</h1>
+          <hr>
+          <form method="POST">
+            {% csrf_token %}
+            <ul class="list-unstyled data">
+              {% if data %}
+              <li>
+                Nombres: <strong>{{ data.first_name }}</strong>
+              </li>
+              <li>
+                Apellidos: <strong>{{ data.last_name }}</strong>
+              </li>
+              <li>
+                Sexo: <strong>{% if data.gender == 'F' %} Femenino {% else %} Masculino {% endif %}</strong>
+              </li>
+              <li>
+                Fecha de nacimiento: <strong>{{ data.birthdate }}</strong>
+              </li>
+              <li>
+                Correo electrónico: <strong>{{ data.email }}</strong>
+              </li>
+              <li>
+                País de Residencia: <strong>{{ data.country }}</strong>
+              </li>
+              {% endif %}
+            </ul>
+
+            <div class="row">
+              <div class="col-xs-12">
+                <button type="submit" class="btn btn-success">{% trans 'Crear cuenta' %}</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <button type="reset" class="btn btn-link"
+                  onclick="window.history.go(-1); return false;">{% trans 'Volver' %}</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

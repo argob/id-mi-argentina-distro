@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n commontags static %}
+
+{% block title %}{% trans 'Registro' %}{% endblock %}
+
+{% block content %}
+<section class="container-fluid container-id">
+  <div class="row">
+    <div class="container">
+      <div class="row">
+          <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+          <div class="media">
+            <div class="media-left">
+              <i class="fa fa-check-circle fa-fw fa-4x text-success"></i>
+            </div>
+            <div class="media-body">
+              <h1 class="m-t-0">¡Tu cuenta fue creada con éxito!</h1>
+            </div>
+          </div>
+
+          <hr>
+          <h2>Ingresá a tu correo electrónico para activar tu cuenta.</h2>
+          <p class="m-b-2">Este es el correo electrónico que ingresaste en el registro:
+            <strong>{{form.email.value}}</strong></p>
+          <form method="POST">
+            {% csrf_token %}
+            <fieldset>
+              <div class="row">
+                <div class="col-md-10 form-group item-form {% if form.email.errors or error %} has-error  {% endif %}">
+                  <label class="control-label" for="email">Cambiar correo electrónico</label>
+                  <input type="email" class="form-control" name="email"
+                    placeholder="{%if form.errors or error %}{{form.email.value}}{%else%}{{user.email}}{%endif%}"
+                    value="{% if form.errors or error %}{{form.email.value}}{% endif %}"
+                    >
+                  </input>
+                  <input type="hidden" name="email_verified" value="False" required>
+                  </input>
+                  <p class="help-block error {% if not error %} has-error {% endif %}">
+                    {{error}}
+                  </p>
+                </div>
+            </fieldset>
+            <button type="submit" class="btn btn-success">{% trans 'Cambiar correo' %}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

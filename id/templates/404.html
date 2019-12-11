@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans '404 - Página no encontrada | Mi Argentina' %}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+		<div class="col-md-8 col-md-offset-2 text-center">
+			<h1><i class="fa fa-exclamation-triangle text-warning margin-20" style="font-size: 2em;"></i> <br> Página no encontrada</h1>
+			<p class="lead margin-40">La dirección web no está bien escrita o fue dada de baja.<br>Te invitamos a explorar el sitio web.</p>
+			<p class="margin-60"><a href="/" class="btn btn-primary">Ir la página de inicio de Mi Argentina</a></p>
+			<p class="margin-60"><a href="https://www.argentina.gob.ar/terminos-y-condiciones">Términos y condiciones</a></p>
+		</div>
+    </div>
+
+{% endblock %}

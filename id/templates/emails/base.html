@@ -1,0 +1,90 @@
+{% load i18n static commontags %}
+
+<body>
+
+<table bgcolor="#ffffff" width="520" cellpadding="0" cellspacing="0" border="0" align="center" style="border-top-left-radius:5px;border-top-right-radius:5px;" class="devicewidth">
+   <tbody>
+      <!-- Spacing -->
+      <tr>
+         <td height="10" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+      </tr>
+      <!-- Spacing -->
+      <!-- logo -->
+      <tr>
+         <td>
+            <div class="imgpop">
+               <a target="_blank" href="#">
+               <img src="https://www.argentina.gob.ar/sites/default/files/miargentina-email.png" alt="Mi Argentina" border="0" width="261" height="46" style="display:block; border:none; outline:none; text-decoration:none;">
+               </a>
+            </div>
+         </td>
+      </tr>
+       <!-- end of logo -->
+      <!-- Spacing -->
+      <tr>
+         <td height="10" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+      </tr>
+      <!-- Spacing -->
+   </tbody>
+</table>
+<!-- start textbox-with-title -->
+<table width="100%" bgcolor="#ffffff" cellpadding="0" cellspacing="0" border="0" id="backgroundTable">
+   <tbody>
+      <tr>
+         <td>
+            <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth">
+               <tbody>
+                  <tr>
+                     <td width="100%">
+                        <table bgcolor="#F2F3F4" width="560" cellpadding="20" cellspacing="0" border="0" align="center" class="devicewidth">
+                           <tbody>
+                              <tr>
+                                 <td>
+                                    <table width="520" align="center" cellpadding="0" cellspacing="0" border="0" class="devicewidthinner">
+                                       <tbody>
+                                          <!-- Spacing -->
+                                          <tr>
+                                             <td width="100%" height="20"></td>
+                                          </tr>
+                                          <!-- Spacing -->
+                                          <!-- img -->
+                                          {% block url_icon %}{% endblock %}
+                                           <!-- end of img -->
+                                          <!-- Spacing -->
+                                          <tr>
+                                             <td width="100%" height="20"></td>
+                                          </tr>
+                                          <!-- Spacing -->
+                                          <!-- Title -->
+                                          {% block title %}{% endblock %}
+                                          <!-- End of Title -->
+                                          <!-- spacing -->
+                                          <tr>
+                                             <td height="30"></td>
+                                          </tr>
+                                          <!-- End of spacing -->
+                                          <!-- content -->
+                                          {% block description %}{% endblock %}
+                                          <!-- End of content -->
+                                          <!-- Spacing -->
+                                          <tr>
+                                             <td width="100%" height="40"></td>
+                                          </tr>
+                                          <!-- End of spacing -->
+                                       </tbody>
+                                    </table>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- end of textbox-with-title -->
+
+</body>

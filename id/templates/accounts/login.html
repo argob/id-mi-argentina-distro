@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans 'Ingresar' %}{% endblock %}
+
+{% block content %}
+<div class="login-container body-login">
+  <section class="container-fluid container-id">
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+            {% include "_snippets/messages.html" %}
+            <form method="post" action="?next={{ next|urlencode }}">
+              {% csrf_token %}
+              <fieldset>
+                <legend>
+                  <h1 class="hidden">Ingresá o creá tu cuenta de Mi Argentina</h1>
+                  <h2>Ingresá a tu cuenta</h2>
+                </legend>
+                <div class="row">
+                  <div class="col-xs-12 form-group item-form {% if form.email.errors %} has-error {% endif %}">
+                    <label for="email" class="control-label">{% trans form.email.label %}</label>
+                    <input id="email" type="text" class="form-control" name="email"
+                      value="{% if form.errors %}{{form.email.value}}{% endif %}">
+                    <p class="help-block error">{% for error in form.email.errors %}{{ error }}{% endfor %}</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12">
+                    <div class="form-group item-form {% if form.password.errors %} has-error {% endif %}">
+                      <label class="control-label" for="password_confirmacion">{% trans form.password.label %}</label>
+                      <input name="password" id="password_confirmacion" type="password" class="form-control">
+                      <span class="fa fa-fw fa-eye-slash input-icon control-label" id="eye-password"
+                        onclick="viewpassword()" alt="Mostrar contraseña"></span>
+                      <p class="help-block">{% for error in form.password.errors %}{{ error }}{% endfor %}</p>
+                      {% for error in form.non_field_errors %}
+                      <div class="form-group has-error">
+                        <p class="help-block">{{ error|safe }}</p>
+                      </div>
+                      {% endfor %}
+                    </div>
+                    <p><a href="{% url 'accounts:password-reset' %}">¿Olvidaste tu contraseña?</a></p>
+                  </div>
+                </div>
+                <div class="row m-t-2">
+                  <div class="col-md-8">
+                    <button id="iniciar-sesion" type="submit" class="btn btn-success">Ingresar</button>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="container-fluid p-t-2 p-b-3">
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+            <fieldset>
+              <legend>
+                <h2>¿No tenés cuenta?</h2>
+              </legend>
+              <a href="{% url 'accounts:register' %}?next={% if request.GET.next %}{{ request.GET.next | urlencode }}{% else %}/{% endif %}"
+                class="btn btn-primary">Creá tu cuenta</a>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+  function viewpassword() {
+    var clave = document.getElementById('password_confirmacion')
+    if (clave.type === 'password') {
+      clave.type = 'text'
+      document.getElementById('eye-password').classList.remove("fa-eye-slash")
+      document.getElementById('eye-password').classList.add("fa-eye")
+    } else {
+      clave.type = 'password'
+      document.getElementById('eye-password').classList.remove("fa-eye")
+      document.getElementById('eye-password').classList.add("fa-eye-slash")
+    }
+  }
+
+</script>
+{% endblock %}

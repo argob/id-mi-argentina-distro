@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans '503 - Mantenimiento | Mi Argentina' %}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+		<div class="col-md-8 col-md-offset-2 text-center">
+			<h1><i class="fa fa-clock-o text-primary margin-20" style="font-size: 2em;"></i> <br>El registro de Mi Argentina está deshabilitado por unas horas</h1>
+			<p class="lead margin-40">Estamos realizando tareas de mantenimiento. Si tenés que registrarte por favor esperá al menos 2 horas y volvé a intentarlo.</p>
+			<p class="lead margin-40">Si ya tenés cuenta podés <a href="https://mi.argentina.gob.ar">ingresar a Mi Argentina</a> con tu CUIL y contraseña.</p>
+
+			<p class="margin-60"><a href="https://www.argentina.gob.ar/terminos-y-condiciones">Términos y condiciones</a></p>
+		</div>
+    </div>
+
+{% endblock %}

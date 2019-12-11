@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n commontags static %}
+
+{% block title %}{% trans 'Registro' %}{% endblock %}
+
+{% block content %}
+<section class="container-fluid container-id">
+  <div class="row">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+          <div class="media">
+            <div class="media-left">
+              <i class="fa fa-check-circle fa-4x text-success"></i>
+            </div>
+            <div class="media-body">
+          <h1>{% trans '¡Tu cuenta fue creada con éxito!' %}</h1>
+        </div>
+      </div>
+      {% csrf_token %}
+      <hr>
+      <h2 class="m-b-1">{% trans 'Ingresá a tu correo electrónico para activar tu cuenta.' %}</h2>
+      <p>{% trans 'Este es el correo electrónico que ingresaste en el registro:' %} <strong>{{ email }}</strong></p>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+
+</section>
+{% endblock %}
+{% block script %}
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans '500 - Error | Mi Argentina' %}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+		<div class="col-md-8 col-md-offset-2 text-center">
+			<h1><i class="fa fa-exclamation-triangle text-danger margin-20" style="font-size: 2em;"></i> <br>Servidor en mantenimiento</h1>
+			<p class="lead margin-40">Por favor intentá ingresar nuevamente más tarde.</p>
+			<p class="margin-60"><a href="https://www.argentina.gob.ar/terminos-y-condiciones">Términos y condiciones</a></p>
+		</div>
+    </div>
+
+{% endblock %}

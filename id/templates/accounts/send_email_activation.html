@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load i18n static commontags %}
+
+{% block title %}{% trans 'Activar correo electrónico' %}{% endblock %}
+
+{% block menu %}
+    {% with "email_verified" as active_tab %}
+    {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block content %}
+{% if not user.email_verified %}
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-offset-2 col-md-8">
+          {% include "_snippets/messages.html" %}
+        <div class="row">
+          <div class="col-xs-12 panels-row-miargentina">
+            <div class="panel panel-default panel-border-gray panel-nolink">
+              <div class="panel-heading">
+                <h2>{% trans 'Activar mi cuenta de Mi Argentina' %}</h2>
+              </div>
+              <div class="panel-body">
+                <ul class="list-group">
+                  <li class="list-group-item">
+                    <form id="formActivate" method="post" action="{% url 'accounts:send-email-activation' %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="next" value="{% get_setting 'MIAR_URL' %}">
+                      <div class="form-group">
+                        <div class="media">
+                          <div class="media-left p-x-1 hidden-xs">
+                            <i class="fa fa-envelope-o fa-fw fa-2x m-t-1" style="color: #767676;"></i>
+                          </div>
+                          <div class="media-body media-middle">
+                            <p>
+                              {% trans 'Para poder usar los servicios necesitás activar tu cuenta confirmando tu dirección de correo electrónico.' %}
+                            </p>
+                            <p>
+                              {% trans 'Por favor revisá tu casilla para completar este proceso. Si no lo recibiste,' %}
+                              <a
+                                href="javascript:submit('mailSuccess')">{% trans 'solicitá un nuevo correo de activación de cuenta.' %}</a>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+    function submit(mailSuccess) {
+        document.forms["formActivate"].submit()
+    }
+    </script>
+{% endblock %}

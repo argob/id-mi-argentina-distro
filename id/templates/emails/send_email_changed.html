@@ -1,0 +1,36 @@
+{% extends "emails/base.html" %}
+{% load i18n commontags %}
+
+{% block url_icon %}
+<tr>
+   <td>
+      <img src="https://www.argentina.gob.ar/sites/default/files/mail_icon.png" alt="" border="0" width="62" height="63" style="display:block; border:none; outline:none; text-decoration:none;">
+   </td>
+</tr>
+{% endblock %}
+
+{% block title %}
+<tr>
+    <td style="font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;color: #333333;text-align:left;line-height: 30px;font-weight: 700;margin: .5em 0;font-size: 2em;">
+        {% trans 'Confirmá tu correo electrónico' %}
+    </td>
+</tr>
+{% endblock %}
+
+{% block description %}
+<tr>
+    <td style="font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;color: #333333;text-align:left;line-height: 24px;font-size: 16px;">
+        <p>{% trans 'Cambiaste tu correo electrónico en <b>Mi Argentina.</b>' %}</p>
+        <p>{% trans 'Para poder usar todos los servicios necesitás activar tu cuenta, confirmando esta dirección.' %}</p>
+        <p>{% trans 'Recordá que podés activar consultas automáticas, configurar a dónde te llegan los mensajes y más.' %}</p>
+    </td>
+</tr>
+<tr>
+    <td width="100%" height="50"></td>
+</tr>
+<tr>
+    <td style="font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif; font-size: 14px; font-weight:bold; color: #333333; text-align:left;line-height: 24px;">
+        <a href="{% get_setting 'SITE_URL' %}{{ activation_url }}&next={{ next }}&utm_medium=email&utm_campaign=mailgun&utm_source=CrearUsuario&utm_content=botonPrincipal" style="color: #ffffff!important;text-decoration:none;font-size: 16px;font-weight: 500;margin-bottom: 10px;padding: 16px 25px;text-transform: uppercase;vertical-align: top;white-space: initial;background-color: #2E7D33;border: 1px solid transparent;border-radius: 4px;">{% trans 'Confirmá tu correo electrónico' %}</a>
+   </td>
+</tr>
+{% endblock %}
