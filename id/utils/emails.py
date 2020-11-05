@@ -17,35 +17,15 @@ logger = logging.getLogger()
 
 
 @shared_task
-def send_email(to, subject, template_name, context=None, tags=None, is_api=True):
+def send_email(to, subject, template_name, context=None, tags=None):
     html_content = render_to_string('emails/' + template_name, context if context else {})
     to = [to] if type(to) in [str] else to
 
-    if is_api:
-        url = '{}/send/message'.format(settings.POSTAL['POSTAL_API_URL'])
+    msg = EmailMessage(subject, html_content, settings.DEFAULT_FROM_EMAIL, to)
+    msg.content_subtype = 'html'
+    msg.tags = tags if tags else []
 
-        payload = {
-            'to': to,
-            'from': settings.POSTAL['POSTAL_FROM_EMAIL'],
-            'subject': subject.encode('utf-8'),
-            'html_body': html_content
-        }
-
-        if tags:
-            payload['tag'] = tags
-
-        header = {'X-Server-API-Key': settings.POSTAL['POSTAL_API_KEY']}
-        response = requests.post(url, data=payload, headers=header)
-        response_json = response.json()
-
-        if response_json['status'] == 'error':
-            logger.error(response_json)
-    else:
-        msg = EmailMessage(subject, html_content, settings.DEFAULT_FROM_EMAIL, to)
-        msg.content_subtype = 'html'
-        msg.tags = tags if tags else []
-
-        msg.send(fail_silently=True)
+    msg.send(fail_silently=True)
 
 
 def email_admins(subject, template_name, context=None):

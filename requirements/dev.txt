@@ -10,3 +10,13 @@ autopep8
 behave-django
 splinter[django]
 django-debug-toolbar
+django-environ==0.4.5
+flower==0.9.3
+ipdb==0.13.2
+
+# Testing
+# ------------------------------------------------------------------------------
+mypy==0.770
+pytest==5.4.2
+pytest-sugar==0.9.3
+pytest-django==3.9.0

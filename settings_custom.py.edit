@@ -1,5 +1,8 @@
+import environ
 import os
 
+
+env = environ.Env()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -18,34 +21,11 @@ SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 
 LOCAL_APPS = ['debug_toolbar',]
+LOCAL_MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware',]
 
-LOCAL_MIDDLEWARE = [
-    #debug toolbar
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-]
-
-# PostgreSQL Docker
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'HOST': 'db',
-#         'PORT': 5432,
-#     }
-# }
-
-# PostgreSQL
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-    }
-}
+# PostgreSQL Docker using local.yml
+DATABASES = {"default": env.db("DATABASE_URL")}
+DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 CACHES = {
     'default': {
@@ -59,19 +39,21 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SERVER_EMAIL = 'Mi Argentina <your-account@mailsender.com>'
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
 
-# AnyMail
-ANYMAIL = {
-    'MAILGUN_API_KEY': '',
-    'MAILGUN_SENDER_DOMAIN': '',
-}
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+# MAILHOG
+EMAIL_BACKEND = env(
+    "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend"
+)
+EMAIL_TIMEOUT = 5
+EMAIL_USE_TLS = False
+EMAIL_HOST = env("EMAIL_HOST", default="mailhog")
+EMAIL_PORT = env("EMAIL_PORT", default="1025")
 
-# Recaptcha
+# reCaptcha
 RECAPTCHA_ENABLE = False
 RECAPTCHA_KEY = ''
 RECAPTCHA_SECRET = ''
 
-# Debug Toolbara
+# Debug Toolbar
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.timer.TimerPanel',
@@ -94,11 +76,8 @@ DEBUG_TOOLBAR_CONFIG={
     'SHOW_TOOLBAR_CALLBACK':show_toolbar
 }
 
-# Celery local
-CELERY_BROKER_URL = 'redis://localhost:6379/'
-
 # Celery Docker
-# CELERY_BROKER_URL = 'redis://redis:6379/'
+CELERY_BROKER_URL = 'redis://redis:6379/'
 
 OIDC_AUTH = {
     # Specify OpenID Connect endpoint. Configuration will be

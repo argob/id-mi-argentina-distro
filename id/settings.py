@@ -1,10 +1,7 @@
 # coding=utf-8
 import os
 
-try:
-    from settings_custom import *
-except ImportError:
-    pass
+from settings_custom import LOCAL_APPS, LOCAL_MIDDLEWARE
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,6 +20,8 @@ INSTALLED_APPS = [
 
     'id',
     'oidc_provider',
+    'rest_framework',
+    'cacheops',
     'django_extensions',
     'behave_django',
     'raven.contrib.django.raven_compat',
@@ -127,6 +126,13 @@ EMAIL_SUBJECT_PREFIX = ''
 SERVER_EMAIL = 'Mi Argentina <contacto@mailsender.com>'
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
 
+# AnyMail
+ANYMAIL = {
+    "MAILGUN_API_KEY": "",
+    "MAILGUN_SENDER_DOMAIN": "",
+}
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+
 # Internationalization & Localization
 LANGUAGE_CODE = 'es-ar'
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
@@ -168,3 +174,16 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ),
 }
+
+CACHEOPS = {
+    # Cache por 48 Hs
+    'id.Country': {'ops': {'fetch', 'get'}, 'timeout': 60 * 60 * 24 * 365},
+    'id.Province': {'ops': {'fetch', 'get'}, 'timeout': 60 * 60 * 24 * 365},
+    'id.District': {'ops': {'fetch', 'get'}, 'timeout': 60 * 60 * 24 * 365},
+    'id.Locality': {'ops': {'fetch', 'get'}, 'timeout': 60 * 60 * 24 * 365},
+}
+
+try:
+    from settings_custom import *
+except ImportError:
+    pass

@@ -43,7 +43,7 @@ from id.modules.api.accounts.serializers import (
     EmailActivationSerializer, RegisterV2Serializer,
     TermAndConditionsModelSerializer,
     CreateUserTermAndConditionSerializer,
-    RegisterV3Serializer,
+    RegisterV3Serializer, PasswordChangeSerializer
 )
 
 

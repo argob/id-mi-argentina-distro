@@ -1,0 +1,66 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: id_local_django
+    depends_on:
+      - postgres
+      - mailhog
+      - celeryworker
+      - flower
+    volumes:
+      - .:/app
+      - '/var/log/id'
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    ports:
+      - "8000:8000"
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/local/postgres/Dockerfile
+    image: id_local_postgres
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+      - local_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.local/.postgres
+    ports:
+      - "5438:5432"
+  redis:
+    image: redis:5.0
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "8025:8025"
+
+
+  celeryworker:
+    <<: *django
+    image: id_local_celeryworker
+    depends_on:
+      - redis
+      - postgres
+
+    ports: []
+    command: /start-celeryworker
+
+  flower:
+    <<: *django
+    image: id_local_flower
+    depends_on:
+      - celeryworker
+    ports:
+      - "5555:5555"
+    command: /start-flower
