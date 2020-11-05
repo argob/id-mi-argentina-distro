@@ -39,6 +39,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'oidc_provider.middleware.SessionManagementMiddleware',
+
+    # Verificación obligatorio del correo electrónico.
+    # 'id.middleware.EmailValidatedMiddleware',
+
+    # Términos y condiciones obligatorio. 
+    # 'id.middleware.TermsAndConditionsMiddleware',
 ]
 
 MIDDLEWARE += LOCAL_MIDDLEWARE
@@ -152,7 +158,7 @@ FIXTURES_ROOT = os.path.join(BASE_DIR, 'id/fixtures')
 
 # Django OIDC Provider
 OIDC_SESSION_MANAGEMENT_ENABLE = True
-OIDC_UNAUTHENTICATED_SESSION_MANAGEMENT_KEY = 'Xiz9eCLMOQ$AAp4^w5OUn5zSV3zySrWuV1rFS9W45tYA*m#HTh'
+OIDC_UNAUTHENTICATED_SESSION_MANAGEMENT_KEY = ''
 OIDC_IDTOKEN_PROCESSING_HOOK = 'id.oidc_provider_settings.default_idtoken_processing_hook'
 OIDC_IDTOKEN_SUB_GENERATOR = 'id.oidc_provider_settings.custom_sub_generator'
 OIDC_EXTRA_SCOPE_CLAIMS = 'id.oidc_provider_settings.CustomScopeClaims'
