@@ -82,22 +82,15 @@
 {% endif %}
 
 <main role="main">
-
-  {% block content %}{% endblock %}
-
+{% block content %}{% endblock %}
 </main>
+
 {% if request.user.is_authenticated %}
 <footer class="main-footer">
   <div class="container-fluid">
-    <div class="row footer" style="">
-      <div class="col-xs-12 col-sm-4 first-footer-item" style="">
+    <div class="row footer">
+      <div class="col-xs-12 col-sm-4 first-footer-item">
         <a href="{% get_setting 'ARGENTINAGOBAR_URL' %}/terminos-y-condiciones">Términos y condiciones</a>
-      </div>
-      <div class="col-xs-12 col-sm-2">
-        <img class="image-responsive" alt="Subsecretaría de Gobierno Digital" src="{% static 'img/logo-ssgd.svg' %}">
-      </div>
-      <div class="col-xs-12 col-sm-2">
-        <img class="image-responsive" alt="Presidencia de la Nación" src="{% static 'img/logo-presidencia.svg' %}">
       </div>
     </div>
   </div>
@@ -108,18 +101,9 @@
     <div class="row">
       <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
         <div class="row">
-          <div class="col-xs-12" style="">
+          <div class="col-xs-12">
             <a href="{% get_setting 'ARGENTINAGOBAR_URL' %}/terminos-y-condiciones" target="_blank"><span
                 class="sr-only">Abrir vínculo en nueva pestaña</span>Terminos y condiciones</a>
-          </div>
-        </div>
-        <div class="row m-t-2">
-          <div class="col-sm-6">
-            <img class="image-responsive" alt="Subsecretaría de Gobierno Digital"
-              src="{% static 'img/logo-ssgd.svg' %}">
-          </div>
-          <div class="col-sm-6">
-            <img class="image-responsive" alt="Presidencia de la Nación" src="{% static 'img/logo-presidencia.svg' %}">
           </div>
         </div>
       </div>

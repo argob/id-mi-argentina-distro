@@ -7,14 +7,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{% endblock %} | Mi Argentina</title>
-    <meta name="description" content="El perfil digital del ciudadano, todas las interacciones con el Estado en un solo lugar."/>
-    <meta name="keywords" content="mi argentina, tramites, servicios, seguimiento, notificaciones, alertas, Estado, perfil digital"/>
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
     <meta name="language" content="Spanish"/>
     <meta name="revisit" content="1 day"/>
     <meta name="distribution" content="Global"/>
     <meta name="robots" content="All"/>
-    <meta name="author" content="Subsecretaría de Gobierno Digital. Presidencia de la Nación."/>
+    <meta name="author" content=""/>
 
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
 
@@ -35,23 +35,11 @@
     {% endblock %}
 </head>
 
-
 {% if request.user.is_authenticated %}
 <body class="sticky-footer">
 {% else %}
 <body class="body-login">
-    {% endif %}
-
-    <!-- Google Tag Manager -->
-    <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-P68ZXT"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-P68ZXT');</script>
-    <!-- End Google Tag Manager -->
-
+{% endif %}
 
     {% block body %}
     {% endblock %}
@@ -66,25 +54,8 @@
         function csrfSafeMethod(e){return/^(GET|HEAD|OPTIONS|TRACE)$/.test(e)}var csrftoken=getCookie("csrftoken");
         $.ajaxSetup({beforeSend:function(e,t){csrfSafeMethod(t.type)||this.crossDomain||e.setRequestHeader("X-CSRFToken",csrftoken)}});
 
-            function redirectTo() {
-                window.location.href = "https://www.argentina.gob.ar/buscar/" + encodeURI(encodeURI($("#searchInput")[0].value));
-            }
-
         $(function() {
             $('[data-toggle="tooltip"]').tooltip();
-
-            var searchInput = $("#searchInput");
-
-            $('#searchButton').click(function(event) {
-                event.preventDefault();
-                redirectTo();
-            });
-
-            searchInput.keypress(function(e) {
-                if(e.which == 13) {
-                    redirectTo();
-                }
-            });
         });
     </script>
 
