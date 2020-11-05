@@ -21,41 +21,40 @@ Esta versión cuenta con las siguientes funcionalidades:
 - Tracking de errores
 
 ## Dependencias y Requisitos
-- Python >= 3.6
-- PostgreSQL >= 10
+- Python >= 3.8
+- PostgreSQL >= 12
 - Redis >= 4.0.9
+- Docker
 
 ## Clonar el proyecto
-```bash
-$ git clone https://github.com/argob/id-mi-argentina-distro.git
-```
 
-## Crear entorno virtual (virtuallenv)
 ```bash
-$ cd id-mi-argentina-distro/
-$ python3 -m venv .venv
+git clone https://github.com/argob/id-mi-argentina-distro.git
 ```
 
 ## Crear el archivo settings_custom.py
+
 ```bash
-$ cp settings_custom.py.edit settings_custom.py
+cp settings_custom.py.edit settings_custom.py
 ```
-> NOTA: configurar las credenciales de la base de datos en DATABASES
+
+## Docker
+
+### Docker Build
+```bash
+docker-compose -f local.yml build
+```
+
+### Docker Up
+
+```bash
+docker-compose -f local.yml up
+```
 
 ## Instalación de paquetes, migraciones, fixtures y creación de superuser
-```bash
-$ ./manage.py setup
-```
 
-## Ejecutar el proyecto
 ```bash
-$ ./manage.py runserver
-
-System check identified no issues (0 silenced).
-December 03, 2019 - 14:28:15
-Django version 2.1.7, using settings 'id.settings'
-Starting development server at http://127.0.0.1:8000/
-Quit the server with CONTROL-C.
+docker-compose -f local.yml run --rm django python manage.py setup
 ```
 
 ## Middlewares
@@ -71,17 +70,43 @@ MIDDLEWARE = [
 ]
 ```
 
+## Celery
+
+Usamos `Celery` para realizar tareas asíncronas, por ejemplo, los envios de mails y usamos `Flower` para su [monitoreo](http://localhost:5555)
+
+
+
 ## Envío de correo electrónico
 
-En este caso pongo MailGun, a modo de ejemplo, como proveedor de envío de correo electrónico.
-[En este link podes ver la documentación del package](https://anymail.readthedocs.io/en/stable/).
+### Entorno desarrollo
+
+Para el entorn de desarrollo usamos `MAILHOG`.
+
+[Aca el link](http://localhost:8025) para acceder a su dashboard.
+
+```bash
+EMAIL_BACKEND = env(
+    "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend"
+)
+EMAIL_TIMEOUT = 5
+EMAIL_USE_TLS = False
+EMAIL_HOST = env("EMAIL_HOST", default="mailhog")
+EMAIL_PORT = env("EMAIL_PORT", default="1025")
+```
+
+### Entorno productivo
+
+**AnyMail**
 
 ```bash
 ANYMAIL = {
-    'MAILGUN_API_KEY': '',
-    'MAILGUN_SENDER_DOMAIN': '',
+    "MAILGUN_API_KEY": "",
+    "MAILGUN_SENDER_DOMAIN": "",
 }
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 ```
+
+[Más info en la documentación oficial](https://anymail.readthedocs.io/en/stable/)
 
 ## Django OIDC Provider
 
