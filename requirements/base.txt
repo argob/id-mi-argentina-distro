@@ -7,7 +7,7 @@ Django==2.2.17
 django-anymail==3.0
 django-oidc-provider==0.7.0
 django-redis==4.6.0
-djangorestframework==3.9.2
+djangorestframework==3.11.2
 djangorestframework-jwt==1.11.0
 django-extensions==2.2.5
 django-cacheops==4.1
