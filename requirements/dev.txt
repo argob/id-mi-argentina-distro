@@ -11,7 +11,7 @@ behave-django
 splinter[django]
 django-debug-toolbar
 django-environ==0.4.5
-flower==0.9.3
+flower==1.2.0
 ipdb==0.13.2
 
 # Testing
